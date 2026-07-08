@@ -2,9 +2,15 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { runIngestion } from "@/lib/ingest";
 
-// Vercel Cron target (spec §8, §17) — runs daily at ~06:00 IST via vercel.json.
-// Vercel signs cron requests with `Authorization: Bearer $CRON_SECRET`; set
-// CRON_SECRET in the deployment env to enable this check (skipped locally).
+// Originally the Vercel Cron target (spec §8, §17), but confirmed in
+// production that Vercel's serverless function timeout kills this well
+// before ~2500 products finish ingesting (504 Gateway Timeout). The real
+// daily schedule now runs via .github/workflows/daily-ingest.yml, which has
+// no such limit. This route is left in place for smaller catalogs or once
+// ingestion is optimized to fit a serverless timeout; not currently relied
+// on. Auth: Vercel signs cron requests with `Authorization: Bearer
+// $CRON_SECRET`; set CRON_SECRET in the deployment env to enable this check
+// (skipped locally).
 export async function GET(request: Request) {
   const secret = process.env.CRON_SECRET;
   if (secret) {

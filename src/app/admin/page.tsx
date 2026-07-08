@@ -16,8 +16,11 @@ export default async function AdminPage() {
           </div>
           <h1 className="td-disp text-2xl font-bold mt-0.5">Pipeline</h1>
         </div>
-        <div className="ml-auto">
+        <div className="ml-auto flex flex-col items-end gap-1">
           <AdminRefreshButton />
+          <span className="td-mono text-[10px] max-w-xs text-right" style={{ color: "var(--td-muted)" }}>
+            At ~2500 products this can exceed Vercel&apos;s function timeout. The daily schedule runs via GitHub Actions instead — use &quot;Run workflow&quot; there for an on-demand refresh that won&apos;t time out.
+          </span>
         </div>
       </div>
 
