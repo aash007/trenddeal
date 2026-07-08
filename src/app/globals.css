@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -147,13 +147,13 @@
 }
 
 .td-mono {
-  font-family: "Poppins", system-ui, sans-serif;
+  font-family: "Inter Tight", system-ui, sans-serif;
   font-variant-numeric: tabular-nums;
   font-feature-settings: "tnum" 1;
 }
 .td-disp,
 .td-body {
-  font-family: "Poppins", system-ui, sans-serif;
+  font-family: "Inter Tight", system-ui, sans-serif;
 }
 .td-scroll::-webkit-scrollbar {
   height: 6px;
