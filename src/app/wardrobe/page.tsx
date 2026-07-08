@@ -5,8 +5,9 @@ import { explainProduct } from "@/lib/scoring";
 import { ProductCard } from "@/components/product-card";
 import { TdBadge } from "@/components/td-badge";
 import { WardrobeChip, WardrobePanel } from "@/components/wardrobe-chip";
-import { OwnedItemRow } from "@/components/owned-item-row";
+import { WardrobeItemCard } from "@/components/wardrobe-item-card";
 import { SWATCH } from "@/lib/constants";
+import type { OwnedItem } from "@/lib/types";
 
 export default async function WardrobePage() {
   const [owned, profile, gaps, scored, saved] = await Promise.all([
@@ -19,6 +20,13 @@ export default async function WardrobePage() {
 
   const nextBuys = scored.filter((p) => p.matchedGap).slice(0, 4);
   const categoryCounts = Object.entries(profile.counts.cat).sort((a, b) => b[1] - a[1]);
+
+  const byCategory = new Map<string, OwnedItem[]>();
+  for (const o of owned) {
+    if (!byCategory.has(o.category)) byCategory.set(o.category, []);
+    byCategory.get(o.category)!.push(o);
+  }
+  const categoriesInOrder = [...byCategory.entries()].sort((a, b) => b[1].length - a[1].length);
 
   return (
     <div>
@@ -121,13 +129,28 @@ export default async function WardrobePage() {
         </div>
       </div>
 
-      <div className="mt-5">
-        <h2 className="td-disp text-base font-semibold mb-2.5">Items you own</h2>
-        <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(150px,1fr))" }}>
-          {owned.map((o) => (
-            <OwnedItemRow key={o.id} id={o.id} name={o.product_name} retailer={o.retailer} color={o.color} />
-          ))}
+      <div className="mt-6">
+        <div className="flex items-baseline gap-2 mb-3">
+          <h2 className="td-disp text-lg font-semibold">Your wardrobe</h2>
+          <span className="text-xs" style={{ color: "var(--td-muted)" }}>
+            · {owned.length} items across {categoriesInOrder.length} categories
+          </span>
         </div>
+        {categoriesInOrder.map(([category, items]) => (
+          <section key={category} className="mb-6">
+            <div className="flex items-baseline gap-2 mb-2.5">
+              <h3 className="td-disp text-sm font-semibold capitalize">{category}</h3>
+              <span className="td-mono text-xs" style={{ color: "var(--td-muted)" }}>
+                {items.length}
+              </span>
+            </div>
+            <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px,1fr))" }}>
+              {items.map((o) => (
+                <WardrobeItemCard key={o.id} item={o} />
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
     </div>
   );
